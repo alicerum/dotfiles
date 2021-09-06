@@ -70,11 +70,7 @@ let g:lightline = {
 let g:palenight_terminal_italics=1
 
 let mapleader=","
-
-au FileType go set noexpandtab
-au FileType go set shiftwidth=4
-au FileType go set softtabstop=4
-au FileType go set tabstop=4
+let maplocalleader="."
 
 set number
 set nobackup
@@ -115,7 +111,6 @@ nmap <silent> gr <Plug>(coc-references)
 " use k to show documentation in preview window.
 nnoremap <silent> K :call <sid>show_documentation()<cr>
 
-nnoremap <silent> <leader>ds :GoDecls<cr>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -137,9 +132,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)“ Formatting selected code.
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
-
-nnoremap <leader>pb :GoBuild<CR>
-nnoremap <leader>pt :GoTest<CR>
 
 
 let g:vimspector_enable_mappings = 'HUMAN'
@@ -177,6 +169,10 @@ nnoremap <leader>qa :qall<CR>
 
 nnoremap <leader>ff :FZF<CR>
 
+inoremap <C-u> <esc>viwUea
+inoremap jk <esc>
+inoremap <esc> <nop>
+
 " close buffer
 nnoremap <silent> <leader>bd :bd<CR>
 
@@ -197,14 +193,30 @@ nnoremap <silent> <leader>bv :vnew<CR>
 nnoremap <silent> <leader>nf :NERDTreeFind<CR>
 
 
-" =================== Vim GoDebug
-let g:go_debug_mappings = {
- \ '(go-debug-print)':      {'key': 'p'},
- \ '(go-debug-next)':       {'key': 'n'},
- \ '(go-debug-step)':       {'key': 's'},
- \ '(go-debug-stepout)':   {'key': 'o'},
-\ }
+" Golang mappings
+augroup golang_files
+	autocmd!
 
+	autocmd FileType go set noexpandtab
+	autocmd FileType go set shiftwidth=4
+	autocmd FileType go set softtabstop=4
+	autocmd FileType go set tabstop=4
+
+	autocmd FileType go,gomod nnoremap <buffer> <localleader>pb :GoBuild<CR>
+	autocmd FileType go,gomod nnoremap <buffer> <localleader>pt :GoTest<CR>
+
+	autocmd FileType go nnoremap <buffer> <localleader>ds :GoDecls<cr>
+augroup END
+
+" Rust mappings
+augroup rust_files
+	autocmd!
+
+	autocmd FileType rust set shiftwidth=4
+	autocmd FileType rust set softtabstop=4
+	autocmd FileType rust set tabstop=4
+	autocmd FileType rust set expandtab
+augroup END
 
 
 if (has("nvim"))

@@ -1,33 +1,35 @@
 call plug#begin('~/.local/share/nvim/plugged')
-Plug 'preservim/nerdtree'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+	Plug 'preservim/nerdtree'
+	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	Plug 'rust-lang/rust.vim'
 
-Plug 'mhinz/vim-signify'
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+	Plug 'mhinz/vim-signify'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+	Plug 'Shougo/neosnippet.vim'
+	Plug 'Shougo/neosnippet-snippets'
 
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
-Plug 'puremourning/vimspector'
+	Plug 'itchyny/lightline.vim'
+	Plug 'mengelbrecht/lightline-bufferline'
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+	Plug 'puremourning/vimspector'
 
-Plug 'tpope/vim-fugitive'
+	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'arcticicestudio/nord-vim'
-Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'ayu-theme/ayu-vim'
-Plug 'joshdick/onedark.vim'
-Plug 'ntk148v/vim-horizon'
-Plug 'overcache/NeoSolarized'
-Plug 'ryanoasis/vim-devicons'
+	Plug 'tpope/vim-fugitive'
+
+	Plug 'drewtempelmeyer/palenight.vim'
+	Plug 'arcticicestudio/nord-vim'
+	Plug 'sonph/onehalf', { 'rtp': 'vim' }
+	Plug 'ayu-theme/ayu-vim'
+	Plug 'joshdick/onedark.vim'
+	Plug 'ntk148v/vim-horizon'
+	Plug 'overcache/NeoSolarized'
+	Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 set clipboard+=unnamedplus
@@ -140,6 +142,8 @@ nnoremap <Leader>dd :call vimspector#Launch()<CR>
 nnoremap <Leader>de :call vimspector#Reset()<CR>
 nnoremap <Leader>dc :call vimspector#Continue()<CR>
 
+nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+
 nmap <Leader>di <Plug>VimspectorBalloonEval
 xmap <Leader>di <Plug>VimspectorBalloonEval
 
@@ -216,6 +220,12 @@ augroup rust_files
 	autocmd FileType rust set softtabstop=4
 	autocmd FileType rust set tabstop=4
 	autocmd FileType rust set expandtab
+augroup END
+
+augroup docker
+	autocmd!
+
+	autocmd BufNewFile,BufRead Dockerfile* set syntax=dockerfile
 augroup END
 
 

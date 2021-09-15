@@ -1,0 +1,11 @@
+{
+    "coc.preferences.hoverTarget": "float",
+    "languageserver": {
+        "golang": {
+            "command": "$HOME/go/bin/gopls",
+            "args": ["-remote", "auto"],
+            "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+            "filetypes": ["go"]
+        }
+    }
+}

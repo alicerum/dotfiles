@@ -5,6 +5,7 @@ let maplocalleader="."
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>t :NERDTreeToggle<CR>
+nnoremap <leader>ee :Explore<CR>
 
 nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
 nnoremap <silent> <leader>sc :source $MYVIMRC<CR>

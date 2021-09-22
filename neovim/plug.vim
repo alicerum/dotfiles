@@ -1,7 +1,7 @@
 "Plugiiiins
 call plug#begin('~/.local/share/nvim/plugged')
 	Plug 'preservim/nerdtree'
-	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+	Plug 'fatih/vim-go',
 
 	Plug 'rust-lang/rust.vim'
 
@@ -23,6 +23,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 	Plug 'tpope/vim-fugitive'
 
+	Plug 'morhetz/gruvbox'
 	Plug 'drewtempelmeyer/palenight.vim'
 	Plug 'arcticicestudio/nord-vim'
 	Plug 'sonph/onehalf', { 'rtp': 'vim' }

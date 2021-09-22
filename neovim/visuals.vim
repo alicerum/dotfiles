@@ -3,18 +3,21 @@ set t_Co=256
 
 set background=dark
 
-colorscheme onedark
+let g:gruvbox_invert_selection=0
+let g:gruvbox_contrast_dark='medium'
+let g:gruvbox_italic=1
+colorscheme gruvbox
 
-let g:palenight_terminal_italics=1
+let g:lightline#bufferline#enable_devicons=1
+let g:lightline#bufferline#enable_nerdfont=1
 
 let g:lightline = {
-      \ 'colorscheme': 'onedark',
+      \ 'colorscheme': 'gruvbox',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ]
       \ },
       \ 'tabline': {
-      \   'left': [ ['buffers'] ],
-      \   'right': [ ['close'] ]
+      \ 'left': [ ['buffers'] ], 'right': [ [] ]
       \ },
       \ 'component_expand': {
       \   'buffers': 'lightline#bufferline#buffers'

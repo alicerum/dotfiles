@@ -2,10 +2,15 @@ runtime plug.vim
 runtime mappings.vim
 runtime visuals.vim
 runtime golang.vim
+runtime rust.vim
 runtime coc.vim
 runtime vimspector.vim
 
-let NERDTreeShowHidden = 1
+" let NERDTreeShowHidden = 1
+
+" this is the fix for stuck netrw windows
+" with vinegar on '-'
+let g:netrw_fastbrowse=0
 
 set clipboard+=unnamedplus
 set showtabline=2

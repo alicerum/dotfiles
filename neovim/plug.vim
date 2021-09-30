@@ -1,6 +1,6 @@
 "Plugiiiins
 call plug#begin('~/.local/share/nvim/plugged')
-	Plug 'preservim/nerdtree'
+"	Plug 'preservim/nerdtree'
 	Plug 'fatih/vim-go',
 
 	Plug 'rust-lang/rust.vim'
@@ -22,6 +22,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-vinegar'
 
 	Plug 'morhetz/gruvbox'
 	Plug 'drewtempelmeyer/palenight.vim'

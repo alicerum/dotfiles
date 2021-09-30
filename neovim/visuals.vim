@@ -8,6 +8,8 @@ let g:gruvbox_contrast_dark='medium'
 let g:gruvbox_italic=1
 colorscheme gruvbox
 
+let g:netrw_liststyle = 3
+
 let g:lightline#bufferline#enable_devicons=1
 let g:lightline#bufferline#enable_nerdfont=1
 

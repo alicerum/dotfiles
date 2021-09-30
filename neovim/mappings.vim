@@ -3,8 +3,10 @@
 let mapleader=","
 let maplocalleader="."
 
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <leader>t :NERDTreeToggle<CR>
+" turning off NERDTree for now
+"nnoremap <leader>t :NERDTreeToggle<CR>
+"nnoremap <silent> <leader>nf :NERDTreeFind<CR>
+
 nnoremap <leader>ee :Explore<CR>
 
 nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
@@ -45,4 +47,3 @@ nnoremap <silent> <leader>bh :new<CR>
 " vertical split with new buffer
 nnoremap <silent> <leader>bv :vnew<CR>
 
-nnoremap <silent> <leader>nf :NERDTreeFind<CR>

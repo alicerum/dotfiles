@@ -3,6 +3,7 @@
 # directory in which this script is located
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+rm -rf "$HOME/.config/kitty"
 mkdir -p "$HOME/.config/kitty"
 pushd "$HOME/.config/kitty" >/dev/null || exit 1
 

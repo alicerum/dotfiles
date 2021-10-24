@@ -1,4 +1,5 @@
 " some rust related settings
+let g:rustfmt_autosave = 1
 
 augroup rust_files
 	autocmd!

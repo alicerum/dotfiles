@@ -1,9 +1,14 @@
 # If you come from bash you might have to change your $PATH.
 export PATH="$HOME/.cargo/bin:$HOME/go/bin:$HOME/Library/Python/3.8/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home"
 export GOPATH="$HOME/go"
+export KO_DOCKER_REPO="localhost:5000/tekton"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/wyvie/.oh-my-zsh"
+
+export LANG=en_US.UTF-8
 
 export EDITOR="nvim"
 

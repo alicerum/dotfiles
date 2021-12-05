@@ -2,8 +2,8 @@
 call plug#begin('~/.local/share/nvim/plugged')
 "	Plug 'preservim/nerdtree'
 	Plug 'fatih/vim-go',
-
 	Plug 'rust-lang/rust.vim'
+	Plug 'neovimhaskell/nvim-hs.vim'
 
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 

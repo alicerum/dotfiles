@@ -3,10 +3,14 @@ runtime mappings.vim
 runtime visuals.vim
 runtime golang.vim
 runtime rust.vim
+runtime haskell.vim
 runtime coc.vim
 runtime vimspector.vim
 
+lua require'nvim-treesitter.install'.compilers = { "gcc" }
+
 " let NERDTreeShowHidden = 1
+
 
 " this is the fix for stuck netrw windows
 " with vinegar on '-'

@@ -16,6 +16,9 @@ nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
 nnoremap <silent> <leader>bn :bn<CR>
 nnoremap <silent> <C-l> :bn<CR>
 
+nnoremap <silent> s l
+nnoremap <silent> l s
+
 " go to previous buffer
 nnoremap <silent> <leader>bp :bp<CR>
 " https://github.com/neovim/neovim/issues/2048

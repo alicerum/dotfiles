@@ -31,3 +31,6 @@ setmap('i', '<C-u>', '<esc>viwUea')
 setmap('n', '<Leader>bh', ':new<CR>')
 setmap('n', '<Leader>bv', ':vnew<CR>')
 
+setmap('n', '<Leader>sh', ':split<CR>')
+setmap('n', '<Leader>sv', ':vsplit<CR>')
+

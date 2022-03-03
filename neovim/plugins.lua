@@ -4,6 +4,8 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'})
   Plug('junegunn/fzf', {['do'] = ':call fzf#install()' })
 
+  Plug('fatih/vim-go', {['do'] = ':GoUpdateBinaries' })
+
   Plug('morhetz/gruvbox')
 
   Plug('nvim-lualine/lualine.nvim')

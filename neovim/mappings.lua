@@ -1,6 +1,3 @@
-vim.g.mapleader=","
-vim.g.maplocalleader="."
-
 local opts = {noremap = true, silent = true}
 local setmap = function(mode, map, action)
 	vim.api.nvim_set_keymap(mode, map, action, opts)

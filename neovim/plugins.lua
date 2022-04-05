@@ -6,6 +6,8 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
   Plug('fatih/vim-go', {['do'] = ':GoUpdateBinaries' })
 
+  Plug('rust-lang/rust.vim')
+
   Plug('morhetz/gruvbox')
 
   Plug('nvim-lualine/lualine.nvim')

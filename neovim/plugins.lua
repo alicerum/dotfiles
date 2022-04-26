@@ -17,6 +17,8 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug('tpope/vim-fugitive')
   Plug('tpope/vim-vinegar')
 
+  Plug('mfussenegger/nvim-dap')
+
   Plug('neovim/nvim-lspconfig')
 
   Plug('hrsh7th/cmp-nvim-lsp')

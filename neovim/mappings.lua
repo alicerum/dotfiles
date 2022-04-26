@@ -3,6 +3,12 @@ local setmap = function(mode, map, action)
 	vim.api.nvim_set_keymap(mode, map, action, opts)
 end
 
+setmap('n', "<Leader>db", ":lua require'dap'.toggle_breakpoint()<CR>")
+setmap('n', "<Leader>dc", ":lua require'dap'.continue()<CR>")
+setmap('n', "<Leader>dso", ":lua require'dap'.step_over()<CR>")
+setmap('n', "<Leader>dsi", ":lua require'dap'.step_into()<CR>")
+setmap('n', "<Leader>dr", ":lua require'dap'.repl.open()<CR>")
+
 setmap('n', '<Leader>ee', ':Explore<CR>')
 
 setmap('n', '<Leader>ec', ':e $MYVIMRC<CR>')

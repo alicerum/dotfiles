@@ -11,6 +11,11 @@ setmap('n', "<Leader>dro", ":lua require'dap'.repl.open()<CR>")
 setmap('n', "<Leader>drc", ":lua require'dap'.repl.close()<CR>")
 
 
+setmap('n', "gn", ":cnext<CR>")
+setmap('n', "gp", ":cprevious<CR>")
+setmap('n', "gc", ":cclose<CR>")
+
+
 setmap('n', '<Leader>ee', ':Explore<CR>')
 
 setmap('n', '<Leader>ec', ':e $MYVIMRC<CR>')

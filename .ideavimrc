@@ -1,0 +1,47 @@
+set clipboard+=unnamed
+set clipboard+=ideaput
+
+let mapleader=","
+
+set visualbell
+set noerrorbells
+set NERDTree
+
+nmap <C-o> <Action>(Back)
+
+nnoremap <leader>ec :e ~/.ideavimrc<CR>
+nnoremap <leader>sc :action IdeaVim.ReloadVimRc.reload<CR>
+
+nnoremap <leader>sv :action SplitVertically<CR>
+nnoremap <leader>sh :action SplitHorizontally<CR>
+
+nnoremap <c-z> :action ToggleDistractionFreeMode<CR>
+
+nnoremap <c-t> :action ActivateTerminalToolWindow<CR>
+nnoremap <leader>t :action Terminal.OpenInTerminal<CR>
+
+nnoremap <leader>tp :action PreviousTab<CR>
+nnoremap <leader>tn :action NextTab<CR>
+
+nnoremap <leader>ff :action GotoFile<CR>
+
+nnoremap <leader>nb :action ShowNavBar<CR>
+nnoremap <leader>nt :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFocus<CR>
+
+nnoremap <leader>dw :action ActivateDebugToolWindow<CR>
+
+nnoremap gr :action FindUsages<CR>
+
+nnoremap <leader>bd :bd<CR>
+nnoremap <leader>fs :w<CR>
+
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <leader>wc <c-w>c<CR>
+
+nnoremap <c-x> :action HideAllWindows<CR>
+
+nnoremap <leader>bg :buffers<CR>:buffer<Space>

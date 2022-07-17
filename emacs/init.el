@@ -11,6 +11,22 @@
 (set-fringe-mode 10)
 (setq-default line-spacing 1)
 
+(defvar --backup-directory (concat user-emacs-directory "backups"))
+(if (not (file-exists-p --backup-directory))
+        (make-directory --backup-directory t))
+(setq backup-directory-alist `(("." . ,--backup-directory)))
+(setq make-backup-files t               ; backup of a file the first time it is saved.
+      backup-by-copying t               ; don't clobber symlinks
+      version-control t                 ; version numbers for backup files
+      delete-old-versions t             ; delete excess backup files silently
+      delete-by-moving-to-trash t
+      kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+      kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+      auto-save-default t               ; auto-save every buffer that visits a file
+      auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+      auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+      )
+
 
 (set-face-attribute 'default nil :font "Hack Nerd Font" :height 160)
 
@@ -41,6 +57,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package unicode-fonts)
+
 (setq visible-bell nil)
 (setq ring-bell-function (lambda ()
   (invert-face 'mode-line)
@@ -57,7 +75,9 @@
   :config
   (mood-line-mode))
 
-(use-package all-the-icons)
+(use-package all-the-icons
+  :config
+  (all-the-icons-install-fonts t))
 
 
 (use-package lsp-mode
@@ -67,8 +87,16 @@
   :init (setq lsp-keymap-prefix "C-c l")
   :hook (python-mode . lsp-deferred))
 
-;; Provides completion, with the proper backend
-;; it will provide Python completion.
+
+(defun wv/company-backend-with-yas (backends)
+      "Add :with company-yasnippet to company BACKENDS.
+Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+  (if (and (listp backends) (memq 'company-yasnippet backends))
+	  backends
+	(append (if (consp backends)
+		    backends
+		  (list backends))
+		'(:with company-yasnippet))))
 
 (use-package company
   :ensure t
@@ -77,6 +105,7 @@
   :config
   (setq company-dabbrev-other-buffers t
         company-dabbrev-code-other-buffers t)
+  (setq company-backends (mapcar #'wv/company-backend-with-yas company-backends))
   :hook ((text-mode . company-mode)
          (prog-mode . company-mode)))
 
@@ -138,7 +167,7 @@ exec-path-from-shell-variables
   :defer t
   :config
   ;; Setting work on to easily switch between environments
-  (setenv "WORKON_HOME" (expand-file-name "~/.emacs.d/venv/"))
+  (setenv "WORKON_HOME" (expand-file-name "~/.pyvenv"))
   ;; Display virtual envs in the menu bar
   (setq pyvenv-menu t)
   ;; Restart the python process when switching environments
@@ -161,6 +190,9 @@ exec-path-from-shell-variables
 
 
 
+(use-package blacken
+  :custom (blacken-skip-string-normalization t)
+  :hook (python-mode . blacken-mode))
 
 
 
@@ -241,9 +273,10 @@ exec-path-from-shell-variables
    "gr" '(lsp-find-references :which-key "references")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")
-   "w" '(:ignore t :which-key "windows")
-   "wn" '(evil-window-next :which-key "next window")
-   "wp" '(evil-window-prev :which-key "previous window")))
+   "w" '(:ignore t :which-key "window")
+   "wn" '(evil-window-next :which-key "next")
+   "wp" '(evil-window-prev :which-key "previous")
+   "wc" '(evil-window-delete :which-key "close")))
 
 (defun wv/evil-hook ()
   (dolist (mode '(custom-mode
@@ -288,6 +321,7 @@ exec-path-from-shell-variables
   "scale text"
   ("j" text-scale-increase "in")
   ("k" text-scale-decrease "out")
+  ("0" #'(lambda () (text-scale-set 0)) "reset")
   ("f" nil "finished" :exit t))
 
 (wv/leader-keys
@@ -311,6 +345,10 @@ exec-path-from-shell-variables
   :init
   (setq projectile-project-search-path '("~/projects" "~/projects/sentinel"))
   (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :after projectile counsel
+  :config (counsel-projectile-mode t))
 
 
 (use-package magit
@@ -356,6 +394,39 @@ exec-path-from-shell-variables
   :after org
   :hook (org-mode . wv/org-mode-visual-fill))
 
+(use-package with-venv)
+
+(use-package dap-mode
+  :after with-venv hydra
+  :config
+  (setq dap-auto-configure-features '(sessions locals controls tooltip))
+  (require 'dap-python)
+  (require 'dap-dlv-go)
+  (setq dap-python-debugger 'debugpy)
+  (defun dap-python--pyenv-executable-find (command)
+    (with-venv (executable-find "python")))
+  (add-hook 'dap-stopped-hook
+            (lambda (arg) (call-interactively #'dap-hydra))))
+
+(wv/leader-keys
+  "d" '(:ignore t :which-key "debug")
+  "dr" '(dap-debug :which-key "run")
+  "db" '(dap-breakpoint-toggle :which-key "toggle breakpoint"))
+
+
+(use-package protobuf-mode)
+(use-package yasnippet
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
+(use-package yasnippet-snippets)
+
+;; Add yasnippet support for all company backends
+;; https://github.com/syl20bnr/spacemacs/pull/179
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
+
+
 
 
 (custom-set-variables
@@ -366,7 +437,7 @@ exec-path-from-shell-variables
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "eca44f32ae038d7a50ce9c00693b8986f4ab625d5f2b4485e20f22c47f2634ae" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" default))
  '(package-selected-packages
-   '(visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
+   '(unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -31,7 +31,8 @@
 (set-face-attribute 'default nil :font "Hack Nerd Font" :height 160)
 
 (column-number-mode)
-(global-display-line-numbers-mode t)
+; (global-display-line-numbers-mode t)
+(add-hook 'prog-mode-hook #'(lambda () (setq display-line-numbers t)))
 
 (dolist (mode '(org-mode-hook
 		        term-mode-hook
@@ -273,10 +274,10 @@ exec-path-from-shell-variables
    "gr" '(lsp-find-references :which-key "references")
    "t" '(:ignore t :which-key "toggles")
    "tt" '(counsel-load-theme :which-key "choose theme")
-   "w" '(:ignore t :which-key "window")
-   "wn" '(evil-window-next :which-key "next")
-   "wp" '(evil-window-prev :which-key "previous")
-   "wc" '(evil-window-delete :which-key "close")))
+   "n" '(:ignore t :which-key "window")
+   "nn" '(evil-window-next :which-key "next")
+   "np" '(evil-window-prev :which-key "previous")
+   "nc" '(evil-window-delete :which-key "close")))
 
 (defun wv/evil-hook ()
   (dolist (mode '(custom-mode
@@ -324,8 +325,18 @@ exec-path-from-shell-variables
   ("0" #'(lambda () (text-scale-set 0)) "reset")
   ("f" nil "finished" :exit t))
 
+(defhydra hydra-window-scale (:timeout 4)
+  "scale window"
+  ("j" enlarge-window "increase v")
+  ("k" shrink-window "decrease v")
+  ("h" (shrink-window-horizontally 2) "decrease h")
+  ("l" (enlarge-window-horizontally 2) "increase h"))
+
+  ("f" nil "finished" :exit t))
+
 (wv/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
+  "ss" '(hydra-text-scale/body :which-key "scale text")
+  "sw" '(hydra-window-scale/body :which-key "scale window"))
 
 
 (use-package tree-sitter
@@ -350,11 +361,15 @@ exec-path-from-shell-variables
   :after projectile counsel
   :config (counsel-projectile-mode t))
 
+(use-package treemacs)
+(use-package treemacs-projectile)
+
 
 (use-package magit
   :after evil-collection
   :config
   (evil-collection-magit-setup)
+  (setq ediff-window-setup-function #'ediff-setup-windows-plain)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
@@ -413,6 +428,14 @@ exec-path-from-shell-variables
   "dr" '(dap-debug :which-key "run")
   "db" '(dap-breakpoint-toggle :which-key "toggle breakpoint"))
 
+(wv/leader-keys
+  "t" '(:ignore t :which-key "treemacs")
+  "tt" '(treemacs :which-key "toggle")
+  "tp" '(:ignore t :which-key "project")
+  "tpc" '(treemacs-collapse-project :which-key "collapse")
+  "tpa" '(treemacs-add-project-to-workspace :which-key "add project to workspace")
+
+
 
 (use-package protobuf-mode)
 (use-package yasnippet
@@ -437,7 +460,7 @@ exec-path-from-shell-variables
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "eca44f32ae038d7a50ce9c00693b8986f4ab625d5f2b4485e20f22c47f2634ae" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" default))
  '(package-selected-packages
-   '(unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
+   '(treemacs-projectile unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

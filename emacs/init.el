@@ -11,6 +11,8 @@
 (set-fringe-mode 10)
 (setq-default line-spacing 1)
 
+(setq native-comp-async-report-warnings-errors nil)
+
 (defvar --backup-directory (concat user-emacs-directory "backups"))
 (if (not (file-exists-p --backup-directory))
         (make-directory --backup-directory t))
@@ -67,11 +69,11 @@
 
 (use-package exec-path-from-shell
   :config
-  (add-to-list 'exec-path-from-shell-variables "GOPRIVATE"))
+  (dolist (var '("GOPRIVATE" "JAVA_HOME" "JAVA_PATH"))
+    (add-to-list 'exec-path-from-shell-variables var)))
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
-(use-package horizon-theme)
 (use-package mood-line
   :config
   (mood-line-mode))
@@ -146,6 +148,9 @@ exec-path-from-shell-variables
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+(use-package lsp-java
+  :hook (java-mode . lsp-deferred))
 
 
 
@@ -270,10 +275,15 @@ exec-path-from-shell-variables
 
   (wv/leader-keys
    "g" '(:ignore t :which-key "go to")
-   "gd" '(lsp-find-definition :which-key "definition")
-   "gr" '(lsp-find-references :which-key "references")
-   "t" '(:ignore t :which-key "toggles")
-   "tt" '(counsel-load-theme :which-key "choose theme")
+   "gd" '(xref-find-definitions :which-key "definition")
+   "gr" '(xref-find-references :which-key "references")
+   "gc" '(xref-go-back :which-key "previous location")
+   "gf" '(xref-go-forward :which-key "next location")
+
+   "b" '(:ignore t :which-key "buffer")
+   "bl" '(counsel-switch-buffer :which-key "list")
+   "bd" '(kill-buffer :which-key "kill")
+
    "n" '(:ignore t :which-key "window")
    "nn" '(evil-window-next :which-key "next")
    "np" '(evil-window-prev :which-key "previous")
@@ -330,13 +340,17 @@ exec-path-from-shell-variables
   ("j" enlarge-window "increase v")
   ("k" shrink-window "decrease v")
   ("h" (shrink-window-horizontally 2) "decrease h")
-  ("l" (enlarge-window-horizontally 2) "increase h"))
-
+  ("l" (enlarge-window-horizontally 2) "increase h")
   ("f" nil "finished" :exit t))
 
 (wv/leader-keys
-  "ss" '(hydra-text-scale/body :which-key "scale text")
-  "sw" '(hydra-window-scale/body :which-key "scale window"))
+  "s" '(:ignore t :which-key "scale")
+  "ss" '(hydra-text-scale/body :which-key "text")
+  "sw" '(hydra-window-scale/body :which-key "window"))
+
+(wv/leader-keys
+  "e" '(:ignore t :which-key "settings")
+  "et" '(counsel-load-theme :which-key "load theme"))
 
 
 (use-package tree-sitter
@@ -354,7 +368,7 @@ exec-path-from-shell-variables
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
-  (setq projectile-project-search-path '("~/projects" "~/projects/sentinel"))
+  (setq projectile-project-search-path '("~/projects"))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -363,6 +377,7 @@ exec-path-from-shell-variables
 
 (use-package treemacs)
 (use-package treemacs-projectile)
+(use-package lsp-treemacs)
 
 
 (use-package magit
@@ -433,7 +448,7 @@ exec-path-from-shell-variables
   "tt" '(treemacs :which-key "toggle")
   "tp" '(:ignore t :which-key "project")
   "tpc" '(treemacs-collapse-project :which-key "collapse")
-  "tpa" '(treemacs-add-project-to-workspace :which-key "add project to workspace")
+  "tpa" '(treemacs-add-project-to-workspace :which-key "add project to workspace"))
 
 
 
@@ -449,7 +464,34 @@ exec-path-from-shell-variables
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
 
+(use-package restclient
+  :config
+  (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode)))
 
+
+(use-package yaml-mode
+  :hook
+  (yaml-mode . (lambda () (setq display-line-numbers t)))
+  :config
+  (dolist (ext '("\\.yaml\\'" "\\.yml\\'"))
+	(add-to-list 'auto-mode-alist `(,ext . yaml-mode))))
+
+
+(use-package rust-mode
+  :hook
+  (rust-mode . (lambda () (setq indent-tabs-mode nil)))
+  (rust-mode . lsp-deferred)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  (setq rust-format-on-save t))
+
+(use-package dockerfile-mode
+  :config
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+
+(use-package groovy-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
 
 (custom-set-variables
@@ -460,10 +502,12 @@ exec-path-from-shell-variables
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "eca44f32ae038d7a50ce9c00693b8986f4ab625d5f2b4485e20f22c47f2634ae" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" default))
  '(package-selected-packages
-   '(treemacs-projectile unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
+   '(groovy-mode dockerfile-mode rust-mode yaml-mode restclient treemacs-projectile unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+

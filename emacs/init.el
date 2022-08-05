@@ -140,14 +140,34 @@ exec-path-from-shell-variables
 (setq lsp-ui-doc-delay 0)
 (setq lsp-ui-doc-position 'at-point)
 
-
-; Golang configuration
-(use-package go-mode)
-(add-hook 'go-mode-hook #'lsp-deferred)
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+(use-package go-mode
+  :hook
+  (go-mode . lsp-deferred))
+
+(defvar-local flycheck-local-checkers nil)
+(defun wv/flycheck-checker-get(fn checker property)
+	(or (alist-get property (alist-get checker flycheck-local-checkers))
+		(funcall fn checker property)))
+(advice-add 'flycheck-checker-get :around 'wv/flycheck-checker-get)
+
+(defun wv/turn-on-go-flycheck()
+  (flycheck-golangci-lint-setup)
+  (setq flycheck-local-checkers '((lsp . ((next-checkers . (golangci-lint)))))))
+
+(use-package flycheck-golangci-lint
+  :hook
+  (go-mode . wv/turn-on-go-flycheck)
+  :config
+  (setq flycheck-golangci-lint-enable-all t)
+  (setq flycheck-golangci-lint-disable-linters '("nlreturn" "gofumpt" "gci")))
+
+
+
 
 (use-package lsp-java
   :hook (java-mode . lsp-deferred))
@@ -502,7 +522,7 @@ exec-path-from-shell-variables
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "eca44f32ae038d7a50ce9c00693b8986f4ab625d5f2b4485e20f22c47f2634ae" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "631c52620e2953e744f2b56d102eae503017047fb43d65ce028e88ef5846ea3b" default))
  '(package-selected-packages
-   '(groovy-mode dockerfile-mode rust-mode yaml-mode restclient treemacs-projectile unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
+   '(flycheck-golangci-lint golangci-lint groovy-mode dockerfile-mode rust-mode yaml-mode restclient treemacs-projectile unicode-fonts yasnippet-snippets protobuf-mode blacken with-venv dap-mode counsel-projectile visual-fill-column org-bullets forge magit evil-magit lsp-pylsp lsp-python-ms tree-sitter-langs tree-sitter projectile hydra evil-collection evil general all-the-icons mood-line elpy doom-themes helpful ivy-rich flycheck exec-path-from-shell company company-mode lsp-ui which-key lsp-mode go-mode counsel ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

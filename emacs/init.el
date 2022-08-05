@@ -161,10 +161,7 @@ exec-path-from-shell-variables
 
 (use-package flycheck-golangci-lint
   :hook
-  (go-mode . wv/turn-on-go-flycheck)
-  :config
-  (setq flycheck-golangci-lint-enable-all t)
-  (setq flycheck-golangci-lint-disable-linters '("nlreturn" "gofumpt" "gci")))
+  (go-mode . wv/turn-on-go-flycheck))
 
 
 
@@ -462,6 +459,12 @@ exec-path-from-shell-variables
   "d" '(:ignore t :which-key "debug")
   "dr" '(dap-debug :which-key "run")
   "db" '(dap-breakpoint-toggle :which-key "toggle breakpoint"))
+
+(wv/leader-keys
+  "l" '(:ignore t :which-key "flycheck")
+  "ll" '(flycheck-list-errors :which-key "list errors")
+  "ln" '(flycheck-next-error :which-key "next error")
+  "lr" '(flycheck-previous-error :which-key "previous error"))
 
 (wv/leader-keys
   "t" '(:ignore t :which-key "treemacs")

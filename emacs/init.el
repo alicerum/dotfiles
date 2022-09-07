@@ -167,7 +167,15 @@ exec-path-from-shell-variables
 
 
 (use-package lsp-java
-  :hook (java-mode . lsp-deferred))
+  :hook (java-mode . lsp-deferred)
+  :config
+  (setq lsp-java-vmargs
+		'("-noverify"
+		  "-Xmx1G"
+		  "-XX:+UseG1GC"
+		  "-XX:+UseStringDeduplication"
+		  "-javaagent:/Users/alice.rum/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar"
+		  "-Xbootclasspath/a:/Users/alice.rum/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar")))
 
 
 
@@ -304,7 +312,12 @@ exec-path-from-shell-variables
    "n" '(:ignore t :which-key "window")
    "nn" '(evil-window-next :which-key "next")
    "np" '(evil-window-prev :which-key "previous")
-   "nc" '(evil-window-delete :which-key "close")))
+   "nc" '(evil-window-delete :which-key "close")
+
+   "h" '(:ignore t :which-key "help")
+   "hh" '(lsp-ui-doc-show :which-key "show")
+   "ht" '(lsp-ui-doc-focus-frame :which-key "focus")
+   "hc" '(lsp-ui-doc-hide :which-key "close")))
 
 (defun wv/evil-hook ()
   (dolist (mode '(custom-mode
@@ -506,7 +519,8 @@ exec-path-from-shell-variables
   (rust-mode . lsp-deferred)
   :config
   (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  (setq rust-format-on-save t))
+  (setq rust-format-on-save t)
+  (setq rustic-lsp-server 'rust-analyzer))
 
 (use-package dockerfile-mode
   :config

@@ -7,12 +7,14 @@ dap.adapters.go = {
 }
 dap.configurations.go = {
   {
-    type = 'go';
-    name = 'Debug';
-    request = 'launch';
-    showLog = false;
-    program = "${file}";
-    dlvToolPath = vim.fn.exepath('/home/wv/go/bin/dlv')  -- Adjust to where delve is installed
+    type = 'go',
+    name = 'Debug',
+    request = 'launch',
+    showLog = true,
+    program = "${file}",
+    cwd = "${workspaceFolder}",
+    args = {"./tmp-trails/ec2-pretty.json"},
+    dlvToolPath = vim.fn.exepath('/Users/alice.rum/go/bin/dlv')  -- Adjust to where delve is installed
   },
 }
 

@@ -1,37 +1,54 @@
-local Plug = vim.fn['plug#']
-vim.call('plug#begin', '~/.config/nvim/plugged')
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-  Plug('nvim-treesitter/nvim-treesitter', {['do'] = ':TSUpdate'})
-  Plug('junegunn/fzf', {['do'] = ':call fzf#install()' })
+require("lazy").setup({
+  "nvim-treesitter/nvim-treesitter",
+  "fatih/vim-go",
+  'rust-lang/rust.vim',
 
-  Plug('fatih/vim-go', {['do'] = ':GoUpdateBinaries' })
+  'nvim-tree/nvim-tree.lua',
 
-  Plug('rust-lang/rust.vim')
+  'morhetz/gruvbox',
 
-  Plug('morhetz/gruvbox')
+  'nvim-lualine/lualine.nvim',
+  'kyazdani42/nvim-web-devicons',
+  {
+    'TimUntersberger/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    },
+  },
 
-  Plug('nvim-lualine/lualine.nvim')
-  Plug('romgrk/barbar.nvim')
-  Plug('kyazdani42/nvim-web-devicons')
+  {'nvim-telescope/telescope.nvim', tag = '0.1.1'},
+  'nvim-lua/plenary.nvim',
+  'BurntSushi/ripgrep',
 
-  Plug('tpope/vim-fugitive')
-  Plug('tpope/vim-vinegar')
+  'tpope/vim-fugitive',
+  'tpope/vim-vinegar',
 
-  Plug('mfussenegger/nvim-dap')
+  'mfussenegger/nvim-dap',
 
-  Plug('neovim/nvim-lspconfig')
+  'neovim/nvim-lspconfig',
 
-  Plug('hrsh7th/cmp-nvim-lsp')
-  Plug('hrsh7th/cmp-buffer')
-  Plug('hrsh7th/cmp-path')
-  Plug('hrsh7th/cmp-cmdline')
-  Plug('hrsh7th/nvim-cmp')
+  'hrsh7th/cmp-nvim-lsp',
+  'hrsh7th/cmp-buffer',
+  'hrsh7th/cmp-path',
+  'hrsh7th/cmp-cmdline',
+  'hrsh7th/nvim-cmp',
 
-  Plug('hrsh7th/cmp-vsnip')
-  Plug('hrsh7th/vim-vsnip')
+  'hrsh7th/cmp-vsnip',
+  'hrsh7th/vim-vsnip',
 
-  Plug('nvim-lua/plenary.nvim')
-  Plug('lewis6991/gitsigns.nvim')
-
-vim.call('plug#end')
-
+  'nvim-lua/plenary.nvim',
+  'lewis6991/gitsigns.nvim',
+})

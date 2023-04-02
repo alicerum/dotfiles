@@ -30,12 +30,13 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'hls', 'gopls', 'rls', 'pyright' }
+local servers = { 'hls', 'gopls', 'rust_analyzer' }
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
     capabilities = capabilities,
@@ -46,4 +47,21 @@ for _, lsp in pairs(servers) do
     }
   }
 end
+
+require('lspconfig')['pylsp'].setup {
+  on_attach=on_attach,
+  filetypes = {'python'},
+  capabilities = capabilities,
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle={
+          enabled=true,
+          ignore={'E501', 'E231'},
+          maxLineLength=120
+        }
+      }
+    }
+  }
+}
 

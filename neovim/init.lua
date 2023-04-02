@@ -30,3 +30,5 @@ wo.signcolumn = 'yes:1'
 vim.g.netrw_fastbrowse = 0
 vim.g.netrw_liststyle = 3
 
+local neogit = require('neogit')
+neogit.setup {}
